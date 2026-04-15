@@ -7,16 +7,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #121212; color: #eee; }
+        /* Define the repeating chessboard background */
+        body {
+            /* You can generate or find a small tiling chessboard image. 
+               This is a placeholder URL for a subtle, tiling pattern. */
+            background-image: url('https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/1489115.png'); /* Replace with your actual chessboard pattern URL */
+            background-repeat: repeat;
+            background-size: 100px 100px; /* Adjust size based on your pattern */
+            color: #eee;
+            position: relative;
+        }
+
+        /* Add a subtle overlay to make the content readable over the background */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(18, 18, 18, 0.85); /* Semi-transparent dark overlay */
+            z-index: -1; /* Place behind all content */
+        }
+
         .gold-accent { color: #c5a059; }
         .bg-card { background: #1e1e1e; border: 1px solid #333; }
         .input-field { background: #111; border: 1px solid #444; border-radius: 8px; padding: 12px; width: 100%; outline: none; }
         .input-field:focus { border-color: #c5a059; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-10 relative">
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-5xl mx-auto z-10 relative">
         <header class="mb-10 flex justify-between items-end">
             <div>
                 <h1 class="text-3xl font-bold uppercase tracking-widest">Coach <span class="gold-accent">Dashboard</span></h1>
@@ -66,35 +85,3 @@
 
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase">About You (Biography)</label>
-                    <textarea name="bio" rows="3" placeholder="Tell students about your chess journey..." class="input-field mt-1">{{ coach.bio }}</textarea>
-                </div>
-
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase block mb-3">Specialties</label>
-                    <div class="flex flex-wrap gap-2">
-                        {% for tag in ["Openings", "Middle Game", "Endgame", "Tactics", "Strategy", "Kids Training"] %}
-                        <label class="flex items-center px-4 py-2 bg-black rounded-lg border border-gray-700 cursor-pointer hover:border-yellow-600">
-                            <input type="checkbox" name="expertise_tags" value="{{ tag }}" class="mr-2 accent-yellow-600" {% if tag in coach.expertise %}checked{% endif %}>
-                            <span class="text-sm">{{ tag }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full bg-stone-200 text-black font-black py-4 rounded-lg hover:bg-white transition-all">
-                    SAVE MY COACH PROFILE
-                </button>
-            </div>
-        </form>
-    </div>
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-yellow-600 px-8 py-3 rounded-full text-black font-bold">
-            {{ messages[0] }}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-</body>
-</html>
