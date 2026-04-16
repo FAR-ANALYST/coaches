@@ -3,81 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Uganda | Play & Learn</title>
+    <title>Chess Uganda | Lobby</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
-        // Theme Switcher Logic
+        // Switch the main game frame URL
+        function updateLiveGame(url) {
+            document.getElementById('main-game-frame').src = url;
+        }
+        // Theme Persistence
         function toggleTheme() {
             const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
         }
-        // Apply theme on load
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
         }
     </script>
     <style>
-        /* Custom scrollbar for the coach slider */
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#161512] text-slate-900 dark:text-gray-200 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#161512] text-slate-900 dark:text-gray-100 transition-colors duration-300">
 
-    <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1c1b18] px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center space-x-6">
-            <h1 class="text-xl font-black tracking-tighter italic">CHESS<span class="text-amber-600">UGANDA</span></h1>
-            <div class="hidden md:flex space-x-4 text-sm font-medium">
-                <a href="#" class="hover:text-amber-600">Play</a>
-                <a href="#" class="hover:text-amber-600">Puzzles</a>
-                <a href="#" class="hover:text-amber-600">Watch</a>
-            </div>
-        </div>
+    <nav class="border-b dark:border-gray-800 bg-white dark:bg-[#1c1b18] px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-black italic">CHESS<span class="text-amber-600">UGANDA</span></h1>
         <div class="flex items-center space-x-4">
             <button onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
                 <i class="fas fa-circle-half-stroke"></i>
             </button>
-            <a href="/admin" class="text-xs font-bold border-2 border-amber-600 text-amber-600 px-4 py-1.5 rounded-full hover:bg-amber-600 hover:text-white transition">
-                COACH PORTAL
-            </a>
+            <a href="/admin" class="text-xs font-bold border-2 border-amber-600 text-amber-600 px-4 py-1.5 rounded-full hover:bg-amber-600 hover:text-white transition">COACH PORTAL</a>
         </div>
     </nav>
 
-    <section class="max-w-7xl mx-auto px-6 pt-10">
-        <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Featured Ugandan Coaches</h3>
-        <div class="flex overflow-x-auto gap-6 pb-6 hide-scroll snap-x">
+    <section class="max-w-7xl mx-auto px-6 py-8">
+        <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Certified Ugandan Coaches</h3>
+        <div class="flex overflow-x-auto gap-6 pb-4 no-scrollbar snap-x">
             {% for c in coaches %}
-            <div class="min-w-[320px] md:min-w-[450px] bg-white dark:bg-[#262421] p-6 rounded-3xl shadow-xl border-t-8 border-amber-600 flex flex-col md:flex-row items-center gap-6 snap-center">
-                <div class="relative flex-shrink-0">
+            <div class="min-w-[320px] md:min-w-[420px] bg-white dark:bg-[#262421] p-6 rounded-2xl shadow-xl border-t-4 border-amber-600 snap-center">
+                <div class="flex items-center gap-4">
                     {% if c.photo %}
-                    <img src="{{ url_for('static', filename='uploads/' + c.photo) }}" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-amber-600/10 shadow-lg">
+                    <img src="{{ url_for('static', filename='uploads/' + c.photo) }}" class="w-20 h-20 rounded-xl object-cover border-2 border-amber-600/10 shadow-md">
                     {% else %}
-                    <div class="w-24 h-24 md:w-32 md:h-32 bg-gray-200 dark:bg-gray-800 rounded-2xl flex items-center justify-center border-4 border-amber-600/10">
-                        <i class="fas fa-user-tie text-3xl text-gray-400"></i>
-                    </div>
+                    <div class="w-20 h-20 bg-gray-200 dark:bg-gray-800 rounded-xl flex items-center justify-center border-2 border-amber-600/10"><i class="fas fa-user text-gray-400"></i></div>
                     {% endif %}
-                    <span class="absolute bottom-1 right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-[#262421] rounded-full"></span>
-                </div>
-                
-                <div class="flex-1">
-                    <h2 class="text-xl font-black text-amber-600">{{ c.name }}</h2>
-                    <p class="font-bold text-[10px] uppercase tracking-widest text-gray-500 mb-2">{{ c.titles }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed mb-3">{{ c.bio }}</p>
-                    <div class="flex justify-between items-center mt-auto">
-                        <span class="font-black text-sm">{{ c.pricing }}</span>
-                        <button class="bg-amber-600 hover:bg-amber-700 text-white font-black text-[10px] px-5 py-2 rounded-xl transition shadow-md">
-                            HIRE COACH
-                        </button>
+                    <div>
+                        <h4 class="font-black text-lg">{{ c.name }}</h4>
+                        <p class="text-[10px] text-amber-600 font-bold uppercase tracking-widest">{{ c.titles }}</p>
+                        <p class="text-xs text-gray-400 mt-1 line-clamp-1 italic">{{ c.bio }}</p>
                     </div>
+                </div>
+                <div class="mt-4 flex justify-between items-center">
+                    <span class="text-sm font-black">{{ c.pricing }}</span>
+                    <button class="bg-amber-600 text-white text-[10px] font-black px-4 py-2 rounded-lg">HIRE</button>
                 </div>
             </div>
             {% endfor %}
@@ -86,53 +66,54 @@
 
     <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <div class="lg:col-span-8 space-y-6">
-            <div class="bg-white dark:bg-[#262421] rounded-2xl p-8 shadow-md">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-black text-xs uppercase tracking-widest text-gray-400">Lobby / Quick Play</h3>
-                    <span class="text-[10px] font-bold text-green-500 animate-pulse uppercase"><i class="fas fa-signal mr-1"></i> Uganda Server Active</span>
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {% for time_label, count in stats.items() %}
-                    <button class="relative flex flex-col items-center justify-center p-6 rounded-2xl bg-gray-50 dark:bg-[#302e2c] border-2 border-transparent hover:border-amber-600 transition-all duration-200 group">
-                        <span class="absolute top-2 right-2 bg-amber-600/10 text-amber-600 dark:text-amber-500 text-[9px] font-black px-2 py-0.5 rounded-full">
-                            {{ count }} playing
+        <div class="lg:col-span-8 space-y-8">
+            {% set categorised_stats = [
+                ('Bullet', ['1+0', '2+1'], 'fa-bolt-lightning'),
+                ('Blitz', ['3+0', '3+2', '5+0'], 'fa-bolt'),
+                ('Rapid', ['5+5', '10+0', '15+10'], 'fa-stopwatch')
+            ] %}
+
+            {% for cat_name, formats, icon in categorised_stats %}
+            <div class="bg-white dark:bg-[#262421] p-6 rounded-2xl shadow-md border-l-4 border-amber-600">
+                <h3 class="font-black text-xs uppercase mb-6 flex items-center gap-2 text-gray-500">
+                    <i class="fas {{ icon }} text-amber-600"></i> {{ cat_name }} Pool
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {% for f in formats %}
+                    <button class="relative p-6 rounded-2xl bg-gray-50 dark:bg-[#302e2c] border-2 border-transparent hover:border-amber-600 transition group">
+                        <span class="absolute top-2 right-2 bg-green-500/10 text-green-500 text-[9px] font-black px-2 py-0.5 rounded-full">
+                            {{ stats[f] }} active
                         </span>
-                        
-                        <span class="font-black text-xl mb-1 group-hover:scale-110 transition-transform">{{ time_label }}</span>
-                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
-                            {% if 'Bullet' in time_label %}Bullet{% elif 'Blitz' in time_label %}Blitz{% else %}Rapid{% endif %}
-                        </span>
+                        <span class="block font-black text-2xl mb-1 group-hover:scale-105 transition-transform">{{ f }}</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ cat_name }}</span>
                     </button>
                     {% endfor %}
                 </div>
             </div>
-            
-            <div class="p-4 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-2xl text-center">
-                <p class="text-xs text-gray-400">Time formats include increments (e.g., 3+2) to match standard FIDE and Lichess regulations in Uganda.</p>
-            </div>
+            {% endfor %}
         </div>
 
         <div class="lg:col-span-4">
             <div class="sticky top-24 space-y-4">
-                <div class="bg-black rounded-3xl overflow-hidden aspect-square shadow-2xl border-4 border-amber-600/20 relative">
-                    <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase rounded-lg z-10 animate-pulse shadow-lg">
-                        <i class="fas fa-video mr-1"></i> Live Game
-                    </div>
-                    <iframe width="100%" height="100%" src="{{ game_url }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                <div class="bg-white dark:bg-[#262421] p-4 rounded-t-2xl border-b dark:border-gray-800 shadow-lg">
+                    <label class="text-[10px] font-black uppercase text-gray-400 block mb-2 italic">Select Live Board</label>
+                    <select onchange="updateLiveGame(this.value)" class="w-full bg-gray-100 dark:bg-[#161512] p-3 rounded-xl text-xs font-bold border border-transparent focus:border-amber-600 outline-none cursor-pointer">
+                        {% for game in games %}
+                        <option value="{{ game.url }}">{{ game.title }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="bg-white dark:bg-[#262421] p-4 rounded-2xl shadow-lg border border-gray-100 dark:border-transparent">
-                    <h4 class="text-xs font-black uppercase mb-2">Game Info</h4>
-                    <p class="text-[10px] text-gray-500">Watching top-rated matches within the local Ugandan circuit. Game feed updated from the master portal.</p>
+                <div class="bg-black aspect-square rounded-b-2xl overflow-hidden shadow-2xl relative border-x-4 border-b-4 border-amber-600/10">
+                    <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase rounded-lg z-10 animate-pulse">LIVE</div>
+                    <iframe id="main-game-frame" width="100%" height="100%" src="{{ games[0].url }}" frameborder="0"></iframe>
                 </div>
+                <p class="text-[10px] text-gray-500 text-center font-bold uppercase tracking-widest">Watching Ugandan Arena Circuit</p>
             </div>
         </div>
-        
     </main>
 
     <footer class="mt-20 p-10 bg-gray-100 dark:bg-[#1c1b18] text-center">
-        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">&copy; 2026 Chess Uganda Federation. Built for the community.</p>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">&copy; 2026 Chess Uganda Federation.</p>
     </footer>
 
 </body>
