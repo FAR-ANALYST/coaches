@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin | Chess Uganda</title>
+    <title>Coach Admin | Chess Uganda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -23,24 +23,29 @@
             <div class="space-y-6">
                 <div class="glass p-6 rounded-2xl text-center">
                     <div class="w-32 h-32 mx-auto mb-4 border-2 border-[#c5a059] rounded-xl overflow-hidden">
+                        {% if coach.photo %}
                         <img src="/static/uploads/{{ coach.photo }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="h-full w-full flex items-center justify-center bg-gray-800"><i class="fas fa-user text-4xl"></i></div>
+                        {% endif %}
                     </div>
                     <input type="file" name="photo" class="text-xs mb-4">
-                    <label class="block text-left text-[10px] uppercase text-gray-400">Live Stream Embed URL</label>
-                    <input type="text" name="stream_url" value="{{ stream_url }}" class="w-full bg-black/50 border border-gray-700 p-2 rounded text-xs mt-1">
+                    
+                    <label class="block text-left text-[10px] uppercase text-gray-400 font-bold mb-1">Live Game Embed URL</label>
+                    <input type="text" name="live_game_url" value="{{ game_url }}" placeholder="Paste Lichess/Chess.com link" class="w-full bg-black/50 border border-gray-700 p-2 rounded text-xs">
                 </div>
             </div>
 
             <div class="lg:col-span-2 glass p-8 rounded-2xl space-y-6">
-                <h2 class="text-2xl font-black uppercase"><span class="text-[#c5a059]">Management</span> Panel</h2>
+                <h2 class="text-2xl font-black uppercase tracking-tight">System <span class="text-[#c5a059]">Dashboard</span></h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="name" value="{{ coach.name }}" placeholder="Name" class="bg-black/40 border border-gray-700 p-3 rounded">
-                    <input type="text" name="location" value="{{ coach.location }}" placeholder="Location" class="bg-black/40 border border-gray-700 p-3 rounded">
-                    <input type="text" name="titles" value="{{ coach.titles }}" placeholder="Title" class="bg-black/40 border border-gray-700 p-3 rounded">
-                    <input type="text" name="pricing" value="{{ coach.pricing }}" placeholder="Pricing" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="name" value="{{ coach.name }}" placeholder="Full Name" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="location" value="{{ coach.location }}" placeholder="District" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="titles" value="{{ coach.titles }}" placeholder="Chess Title" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="pricing" value="{{ coach.pricing }}" placeholder="e.g. 50k/hour" class="bg-black/40 border border-gray-700 p-3 rounded">
                 </div>
-                <textarea name="bio" rows="4" class="w-full bg-black/40 border border-gray-700 p-3 rounded">{{ coach.bio }}</textarea>
-                <button type="submit" class="w-full bg-[#c5a059] text-black font-bold py-4 rounded hover:bg-yellow-600 transition">UPDATE PLATFORM</button>
+                <textarea name="bio" rows="4" placeholder="Professional Bio..." class="w-full bg-black/40 border border-gray-700 p-3 rounded">{{ coach.bio }}</textarea>
+                <button type="submit" class="w-full bg-[#c5a059] text-black font-bold py-4 rounded hover:bg-yellow-600 transition uppercase tracking-widest">Update All Sections</button>
             </div>
         </form>
     </div>
