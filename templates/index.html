@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Uganda | Play & Watch</title>
+    <title>Chess Uganda | Play & Learn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -17,49 +17,85 @@
     </script>
 </head>
 <body class="bg-slate-100 dark:bg-[#161512] text-slate-900 dark:text-gray-200 transition-colors">
+
     <nav class="border-b dark:border-gray-800 bg-white dark:bg-[#1c1b18] px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <h1 class="text-xl font-black italic">CHESS<span class="text-amber-600">UGANDA</span></h1>
+        <h1 class="text-xl font-black italic tracking-tighter">CHESS<span class="text-amber-600">UGANDA</span></h1>
         <div class="flex items-center space-x-4">
             <button onclick="toggleTheme()" class="p-2 rounded bg-gray-200 dark:bg-gray-800"><i class="fas fa-adjust"></i></button>
-            <a href="/admin" class="bg-amber-600 text-white px-4 py-2 rounded text-sm font-bold">Admin</a>
+            <a href="/admin" class="bg-amber-600 text-white px-4 py-2 rounded text-sm font-bold shadow-lg shadow-amber-600/20">Portal</a>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-8 space-y-6">
-            <div class="bg-white dark:bg-[#262421] rounded-xl p-6 shadow-md">
-                <h2 class="font-bold mb-4 uppercase text-xs tracking-widest text-gray-500">Lobby / Quick Play</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">1+0 Bullet</button>
-                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">3+0 Blitz</button>
-                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">10+0 Rapid</button>
-                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">Correspondence</button>
+    <section class="max-w-7xl mx-auto px-6 pt-10">
+        <div class="bg-white dark:bg-[#262421] p-8 rounded-2xl shadow-xl border-l-8 border-amber-600 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-6">
+                <div class="relative">
+                    <img src="/static/uploads/{{ coach.photo }}" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-amber-600/10">
+                    <span class="absolute bottom-2 right-2 w-4 h-4 bg-green-500 border-2 border-white dark:border-[#262421] rounded-full"></span>
                 </div>
-            </div>
-
-            <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-amber-600/30">
-                <iframe width="100%" height="100%" src="{{ stream_url }}" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-
-        <div class="lg:col-span-4 space-y-6">
-            <div class="bg-white dark:bg-[#262421] rounded-xl p-6 shadow-md border-t-4 border-amber-600">
-                <h3 class="font-bold mb-4 italic">FEATURED COACH</h3>
-                <div class="flex items-center space-x-4">
-                    <img src="/static/uploads/{{ coach.photo }}" class="w-16 h-16 rounded-full object-cover border-2 border-amber-600">
-                    <div>
-                        <p class="font-bold">{{ coach.name }}</p>
-                        <p class="text-xs text-amber-600">{{ coach.titles }}</p>
-                        <p class="text-[10px] text-gray-500">{{ coach.location }}</p>
+                <div>
+                    <h2 class="text-2xl font-black text-amber-600">{{ coach.name or 'Featured Coach' }}</h2>
+                    <p class="font-bold text-sm uppercase tracking-widest text-gray-500">{{ coach.titles or 'Expert Instructor' }}</p>
+                    <p class="text-xs text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> {{ coach.location or 'Uganda' }}</p>
+                    <div class="flex gap-2 mt-3">
+                        <span class="px-2 py-1 bg-amber-600/10 text-amber-600 text-[10px] font-bold rounded">TOP RATED</span>
+                        <span class="px-2 py-1 bg-green-600/10 text-green-600 text-[10px] font-bold rounded">ONLINE NOW</span>
                     </div>
                 </div>
-                <p class="text-xs mt-4 text-gray-400 leading-relaxed">{{ coach.bio }}</p>
-                <div class="mt-4 pt-4 border-t dark:border-gray-700 flex justify-between items-center">
-                    <span class="font-bold text-amber-600">{{ coach.pricing }}</span>
-                    <button class="bg-amber-600 text-white px-3 py-1 rounded text-xs">Hire</button>
+            </div>
+            <div class="text-center md:text-right w-full md:w-auto">
+                <p class="text-2xl font-black mb-1">{{ coach.pricing or 'Affordable Rates' }}</p>
+                <p class="text-xs text-gray-400 mb-4">Personalized training sessions</p>
+                <button class="w-full md:w-auto bg-amber-600 hover:bg-amber-700 text-white font-black px-10 py-4 rounded-xl shadow-lg transition-transform active:scale-95">BOOK TRAINING NOW</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <div class="lg:col-span-7 space-y-6">
+            <div class="bg-white dark:bg-[#262421] rounded-xl p-6 shadow-md">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-black text-sm uppercase tracking-widest text-gray-500">Play Online</h3>
+                    <span class="text-xs font-bold text-green-500">● Live Lobby</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">1+0</span><span class="text-[10px] text-gray-500">Bullet</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">2+1</span><span class="text-[10px] text-gray-500">Bullet</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">3+0</span><span class="text-[10px] text-gray-500">Blitz</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">3+2</span><span class="text-[10px] text-gray-500">Blitz</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">5+0</span><span class="text-[10px] text-gray-500">Blitz</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">5+5</span><span class="text-[10px] text-gray-500">Blitz</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">10+0</span><span class="text-[10px] text-gray-500">Rapid</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 rounded-lg bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-800 hover:border-amber-600">
+                        <span class="font-bold">10+5</span><span class="text-[10px] text-gray-500">Rapid</span>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <div class="lg:col-span-5">
+            <div class="bg-black rounded-2xl overflow-hidden aspect-square shadow-2xl border-4 border-amber-600/20">
+                <div class="absolute bg-amber-600 text-white px-3 py-1 text-[10px] font-black uppercase rounded-br-lg z-10">Live Stream</div>
+                <iframe width="100%" height="100%" src="{{ game_url }}" frameborder="0"></iframe>
+            </div>
+            <p class="text-[10px] text-center mt-3 text-gray-500">Powered by Chess Uganda Real-Time Engine</p>
+        </div>
     </main>
+
 </body>
 </html>
