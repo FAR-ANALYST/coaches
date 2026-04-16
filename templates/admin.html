@@ -2,185 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Admin Portal | Chess Uganda</title>
+    <title>Admin | Chess Uganda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            /* Custom Wood Chessboard Background */
             background-image: url('https://i.ebayimg.com/images/g/Ijyc9oAAOSw~f9m~o~U/s-l1600.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #f3f4f6;
-            position: relative;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Inter', sans-serif;
+            background-size: cover; background-attachment: fixed;
         }
-
-        /* Dark overlay to ensure text contrast */
         body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.78);
-            z-index: -1;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: -1;
         }
-
-        .gold-accent { color: #c5a059; }
-        .border-gold { border-color: #c5a059; }
-        
-        /* Glass-morphism Card Effect */
-        .glass-card { 
-            background: rgba(30, 30, 30, 0.85); 
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 1.5rem;
-        }
-
-        .input-field { 
-            background: rgba(0, 0, 0, 0.4); 
-            border: 1px solid #444; 
-            border-radius: 0.75rem; 
-            padding: 0.8rem 1rem; 
-            width: 100%; 
-            outline: none; 
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus { 
-            border-color: #c5a059; 
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #c5a059 0%, #9e7e43 100%);
-            color: #000;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .btn-save:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
+        .glass { background: rgba(30,30,30,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="p-4 md:p-8">
-
-    <div class="max-w-6xl mx-auto z-10 relative">
-        <header class="mb-8 flex justify-between items-center bg-black/40 p-6 rounded-2xl border border-white/5">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-black uppercase tracking-tighter">
-                    Chess <span class="gold-accent">Uganda</span> 
-                    <span class="text-sm font-light text-gray-400 block md:inline md:ml-2">Coach Management System</span>
-                </h1>
-            </div>
-            <div class="hidden md:block text-right">
-                <i class="fas fa-chess-king text-4xl gold-accent"></i>
-            </div>
-        </header>
-
+<body class="text-gray-200 p-6 md:p-12 relative">
+    <div class="max-w-5xl mx-auto relative z-10">
         <form action="/admin" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
             <div class="space-y-6">
-                <div class="glass-card p-8 text-center">
-                    <div class="relative w-40 h-40 mx-auto mb-6 group border-4 border-gold rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
-                        {% if not coach.photo %}
-                            <i class="fas fa-user-tie text-6xl text-gray-600"></i>
-                        {% else %}
-                            <img src="/static/uploads/{{ coach.photo }}" class="object-cover w-full h-full">
-                        {% endif %}
-                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-                            <i class="fas fa-camera text-2xl text-white"></i>
-                        </div>
-                        <input type="file" name="photo" class="absolute inset-0 opacity-0 cursor-pointer">
+                <div class="glass p-6 rounded-2xl text-center">
+                    <div class="w-32 h-32 mx-auto mb-4 border-2 border-[#c5a059] rounded-xl overflow-hidden">
+                        <img src="/static/uploads/{{ coach.photo }}" class="w-full h-full object-cover">
                     </div>
-                    <h3 class="text-lg font-bold mb-1">Coach Profile Picture</h3>
-                    <p class="text-xs text-gray-500 mb-6 italic">Click image to upload your photo</p>
-                    
-                    <div class="text-left">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Training Fees / Terms</label>
-                        <input type="text" name="pricing" value="{{ coach.pricing }}" placeholder="e.g. 50,000 UGX per hour" class="input-field mt-1 text-center font-bold">
-                    </div>
-                </div>
-
-                <div class="glass-card p-6">
-                    <h4 class="text-sm font-bold gold-accent uppercase mb-4 flex items-center">
-                        <i class="fas fa-file-export mr-2"></i> Upload Materials
-                    </h4>
-                    <div class="border-2 border-dashed border-gray-600 rounded-xl p-4 text-center hover:border-gold transition-colors">
-                        <input type="file" name="material" id="material" class="hidden">
-                        <label for="material" class="cursor-pointer">
-                            <i class="fas fa-upload text-xl text-gray-500 mb-2"></i>
-                            <p class="text-[11px] text-gray-400">Add PGNs, Puzzles, or PDF Books</p>
-                        </label>
-                    </div>
+                    <input type="file" name="photo" class="text-xs mb-4">
+                    <label class="block text-left text-[10px] uppercase text-gray-400">Live Stream Embed URL</label>
+                    <input type="text" name="stream_url" value="{{ stream_url }}" class="w-full bg-black/50 border border-gray-700 p-2 rounded text-xs mt-1">
                 </div>
             </div>
 
-            <div class="lg:col-span-2 glass-card p-8 md:p-10 shadow-2xl">
-                <h3 class="text-xl font-bold mb-8 flex items-center border-b border-white/10 pb-4">
-                    <i class="fas fa-id-card mr-3 gold-accent"></i> Professional Credentials
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Full Name</label>
-                        <input type="text" name="name" value="{{ coach.name }}" placeholder="Enter your full name" class="input-field">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Location (District/City)</label>
-                        <input type="text" name="location" value="{{ coach.location }}" placeholder="e.g. Kampala, Mbarara, Jinja" class="input-field">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Contact Details</label>
-                        <input type="text" name="contact" value="{{ coach.contact }}" placeholder="Phone or Email" class="input-field">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Chess Title(s)</label>
-                        <input type="text" name="titles" value="{{ coach.titles }}" placeholder="e.g. FIDE CM, National Coach" class="input-field">
-                    </div>
+            <div class="lg:col-span-2 glass p-8 rounded-2xl space-y-6">
+                <h2 class="text-2xl font-black uppercase"><span class="text-[#c5a059]">Management</span> Panel</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="name" value="{{ coach.name }}" placeholder="Name" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="location" value="{{ coach.location }}" placeholder="Location" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="titles" value="{{ coach.titles }}" placeholder="Title" class="bg-black/40 border border-gray-700 p-3 rounded">
+                    <input type="text" name="pricing" value="{{ coach.pricing }}" placeholder="Pricing" class="bg-black/40 border border-gray-700 p-3 rounded">
                 </div>
-
-                <div class="mt-8 space-y-2">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Biography & Experience</label>
-                    <textarea name="bio" rows="4" placeholder="Briefly describe your coaching style and history..." class="input-field resize-none">{{ coach.bio }}</textarea>
-                </div>
-
-                <div class="mt-8">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-4">Areas of Expertise</label>
-                    <div class="flex flex-wrap gap-3">
-                        {% for tag in ["Opening Theory", "Middle Game", "Endgame Tech", "Tactics", "Strategy", "Kid's Training", "Mental Prep"] %}
-                        <label class="flex items-center px-4 py-2 bg-black/40 border border-white/10 rounded-xl cursor-pointer hover:border-gold transition-all select-none group">
-                            <input type="checkbox" name="expertise_tags" value="{{ tag }}" class="mr-3 w-4 h-4 accent-[#c5a059]" {% if tag in coach.expertise %}checked{% endif %}>
-                            <span class="text-sm group-hover:text-white">{{ tag }}</span>
-                        </label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="mt-12">
-                    <button type="submit" class="btn-save w-full py-5 rounded-2xl shadow-xl flex items-center justify-center space-x-2">
-                        <i class="fas fa-save"></i>
-                        <span>SYNC PROFILE TO DATABASE</span>
-                    </button>
-                </div>
+                <textarea name="bio" rows="4" class="w-full bg-black/40 border border-gray-700 p-3 rounded">{{ coach.bio }}</textarea>
+                <button type="submit" class="w-full bg-[#c5a059] text-black font-bold py-4 rounded hover:bg-yellow-600 transition">UPDATE PLATFORM</button>
             </div>
         </form>
     </div>
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-[#c5a059] text-black px-10 py-4 rounded-full font-black shadow-2xl z-50 animate-pulse">
-            <i class="fas fa-check-circle mr-2"></i> {{ messages[0] }}
-        </div>
-      {% endif %}
-    {% endwith %}
-
 </body>
 </html>
