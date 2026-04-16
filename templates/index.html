@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Uganda | Play & Watch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="bg-slate-100 dark:bg-[#161512] text-slate-900 dark:text-gray-200 transition-colors">
+    <nav class="border-b dark:border-gray-800 bg-white dark:bg-[#1c1b18] px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-black italic">CHESS<span class="text-amber-600">UGANDA</span></h1>
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleTheme()" class="p-2 rounded bg-gray-200 dark:bg-gray-800"><i class="fas fa-adjust"></i></button>
+            <a href="/admin" class="bg-amber-600 text-white px-4 py-2 rounded text-sm font-bold">Admin</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-8 space-y-6">
+            <div class="bg-white dark:bg-[#262421] rounded-xl p-6 shadow-md">
+                <h2 class="font-bold mb-4 uppercase text-xs tracking-widest text-gray-500">Lobby / Quick Play</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">1+0 Bullet</button>
+                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">3+0 Blitz</button>
+                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">10+0 Rapid</button>
+                    <button class="p-4 rounded bg-gray-50 dark:bg-[#302e2c] border dark:border-gray-700 hover:border-amber-600">Correspondence</button>
+                </div>
+            </div>
+
+            <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-amber-600/30">
+                <iframe width="100%" height="100%" src="{{ stream_url }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="lg:col-span-4 space-y-6">
+            <div class="bg-white dark:bg-[#262421] rounded-xl p-6 shadow-md border-t-4 border-amber-600">
+                <h3 class="font-bold mb-4 italic">FEATURED COACH</h3>
+                <div class="flex items-center space-x-4">
+                    <img src="/static/uploads/{{ coach.photo }}" class="w-16 h-16 rounded-full object-cover border-2 border-amber-600">
+                    <div>
+                        <p class="font-bold">{{ coach.name }}</p>
+                        <p class="text-xs text-amber-600">{{ coach.titles }}</p>
+                        <p class="text-[10px] text-gray-500">{{ coach.location }}</p>
+                    </div>
+                </div>
+                <p class="text-xs mt-4 text-gray-400 leading-relaxed">{{ coach.bio }}</p>
+                <div class="mt-4 pt-4 border-t dark:border-gray-700 flex justify-between items-center">
+                    <span class="font-bold text-amber-600">{{ coach.pricing }}</span>
+                    <button class="bg-amber-600 text-white px-3 py-1 rounded text-xs">Hire</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
