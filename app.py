@@ -7,16 +7,20 @@ app = Flask(__name__)
 # Secure key for session management and flash messages
 app.secret_key = "chess_uganda_2026_final_secure_v3"
 
-# --- FILE CONFIGURATION ---
-# Using os.path.join ensures compatibility between local Windows and Render's Linux environment
+# --- THE FIX FOR STATUS 1 ERROR ---
+# We define the path and check it manually to avoid the Render 'FileExists' crash
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# 'exist_ok=True' prevents the crash on Render if the folder already exists
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+if not os.path.exists(UPLOAD_FOLDER):
+    try:
+        # We try to create it, but if Render's filesystem says no, 
+        # the app won't crash (it will just log the issue).
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    except Exception as e:
+        print(f"Directory check notice: {e}")
 
 # --- GLOBAL DATA STORE ---
-# Multi-coach support and live game monitoring
 site_data = {
     "coaches": [
         {
@@ -36,19 +40,18 @@ site_data = {
             "bio": "National champion focused on middle-game mastery and tactical precision."
         }
     ],
-    "live_game_url": "https://lichess.org/tv/frame?theme=brown&bg=dark" # Default live feed
+    "live_game_url": "https://lichess.org/tv/frame?theme=brown&bg=dark"
 }
 
 def allowed_file(filename):
-    """Check if the uploaded file has a valid extension."""
+    """Utility to check image extensions."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 # --- ROUTES ---
 
 @app.route('/')
 def index():
-    """Public Lichess-style Index Page with player monitoring."""
-    # Simulated live player counts for Ugandan time control pools
+    """Lichess-style Index Page with live Ugandan player monitoring."""
     stats = {
         "1+0": random.randint(20, 50),
         "2+1": random.randint(15, 40),
@@ -63,10 +66,10 @@ def index():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    """Chessboard-themed Admin Dashboard."""
+    """Dashboard to update the primary coach and the live game feed."""
     global site_data
     if request.method == 'POST':
-        # Update the primary coach's details (index 0)
+        # Update the main coach (Farouk)
         site_data['coaches'][0].update({
             "name": request.form.get('name'),
             "location": request.form.get('location'),
@@ -75,25 +78,25 @@ def admin():
             "bio": request.form.get('bio')
         })
         
-        # Update the Live Game URL from the admin panel
+        # Update Live Feed
         site_data['live_game_url'] = request.form.get('live_game_url')
 
-        # Handle Profile Photo Upload
+        # Handle Photo Upload
         if 'photo' in request.files:
             file = request.files['photo']
             if file and file.filename != '' and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(file_path)
+                # Create full path
+                save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(save_path)
                 site_data['coaches'][0]['photo'] = filename
 
-        flash("Platform settings and live feed updated!", "success")
+        flash("Chess Uganda Platform Updated!", "success")
         return redirect(url_for('admin'))
 
-    # Passing the first coach to the admin template for editing
     return render_template('admin.html', coach=site_data['coaches'][0], game_url=site_data['live_game_url'])
 
 if __name__ == '__main__':
-    # Render provides a 'PORT' environment variable; default to 5000 for local testing
+    # Binding to Render's dynamic port
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
